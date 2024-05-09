@@ -16,9 +16,9 @@ const (
 )
 
 var queryTpl = template.Must(template.New("").Option("missingkey=error").Parse(`
-sum(count_over_time((up{ {{.filter}} } == 0)[{{"{{ .window }}"}}:])) or vector(0)
+sum(count_over_time(min by (service) (up{ {{.filter}} }) == 0 [{{"{{ .window }}"}}:])) or vector(0)
 /
-sum(count_over_time((up{ {{.filter}} })[{{"{{ .window }}"}}:]))
+sum(count_over_time(min by (service) (up{ {{.filter}} }) [{{"{{ .window }}"}}:]))
 `))
 
 // SLIPlugin will return a query that will return the availability of Prometheus registered targets.
