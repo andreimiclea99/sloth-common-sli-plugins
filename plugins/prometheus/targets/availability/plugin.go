@@ -26,16 +26,15 @@ func SLIPlugin(ctx context.Context, meta, labels, options map[string]string) (st
     var b bytes.Buffer
     data := map[string]string{
         "filter": getFilter(options),
+        "window": options["window"],  // Ensure this key is present in `options`
     }
+
     err := queryTpl.Execute(&b, data)
     if err != nil {
         return "", fmt.Errorf("could not render query template: %w", err)
     }
 
-    generatedQuery := b.String()
-    fmt.Println("Generated Query:", generatedQuery) // Log the query
-
-    return generatedQuery, nil
+    return b.String(), nil
 }
 
 func getFilter(options map[string]string) string {
