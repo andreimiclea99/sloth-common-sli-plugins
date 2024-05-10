@@ -23,16 +23,19 @@ sum(count_over_time((sum by (service) (clamp_min(up{ {{.filter}} }, 1)) [{{"{{ .
 
 // SLIPlugin will return a query that will return the availability of Prometheus registered targets.
 func SLIPlugin(ctx context.Context, meta, labels, options map[string]string) (string, error) {
-	var b bytes.Buffer
-	data := map[string]string{
-		"filter": getFilter(options),
-	}
-	err := queryTpl.Execute(&b, data)
-	if err != nil {
-		return "", fmt.Errorf("could not render query template: %w", err)
-	}
+    var b bytes.Buffer
+    data := map[string]string{
+        "filter": getFilter(options),
+    }
+    err := queryTpl.Execute(&b, data)
+    if err != nil {
+        return "", fmt.Errorf("could not render query template: %w", err)
+    }
 
-	return b.String(), nil
+    generatedQuery := b.String()
+    fmt.Println("Generated Query:", generatedQuery) // Log the query
+
+    return generatedQuery, nil
 }
 
 func getFilter(options map[string]string) string {
